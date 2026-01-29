@@ -3,6 +3,10 @@
 Nixtat is a script for quick and simple nix store space occupation analysis.
 It scans your `/nix/store` (or any specified path), aggregates package sizes by name (with or without versions), and displays a sorted, human-readable table of the results.
 
+## Demo
+
+[![asciicast](https://asciinema.org/a/doZOU6Xmr1rtCM2o.svg)](https://asciinema.org/a/doZOU6Xmr1rtCM2o)
+
 # Features
 
 - **Smart Aggregation**: Automatically groups packages by name (e.g., `python3-3.10` and `python3-3.11` are grouped under `python3` unless configured otherwise).
