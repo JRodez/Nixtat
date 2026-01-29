@@ -11,13 +11,14 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         lib = pkgs.lib;
+        nixtat = import ./default.nix { inherit pkgs; };
       in
       {
-        packages.default = import ./default.nix { inherit pkgs; };
+        packages.default = nixtat;
 
         apps.default = {
           type = "app";
-          program = lib.getExe self.packages.${system}.default "nixtat.py";
+          program = lib.getExe nixtat;
         };
 
         devShells.default = pkgs.mkShell {

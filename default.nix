@@ -14,8 +14,8 @@ let
   );
 in
 stdenv.mkDerivation {
-  pname = "nixdirstat";
-  version = "0.1.0";
+  pname = "nixtat";
+  version = "0.1.1";
   src = ./.;
 
   buildInputs = [
@@ -24,6 +24,6 @@ stdenv.mkDerivation {
   ];
 
   unpackPhase = ":";
-  installPhase = "install -m755 -D $src/nixtat.py $out/bin/nixtat.py";
+  installPhase = "install -m755 -D $src/nixtat.py $out/bin/nixtat";
 
 }
