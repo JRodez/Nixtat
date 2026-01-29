@@ -10,24 +10,25 @@ from collections import defaultdict
 # Configuration des arguments, -h est réservé donc on utilise --human-readable et -H
 parser = argparse.ArgumentParser(description="Analyze disk space used by packages in a nix store.")
 parser.add_argument('--with-version', action='store_true', help="Keep version numbers in package names.")
-parser.add_argument('-H', '--human-readable', action='store_true', help="Display sizes in human-readable format, add headers and a progress bar.")
+parser.add_argument('-H', '--human-readable', action='store_true', help="Display sizes in human-readable format, add headers and a progress bar (Default).")
 parser.add_argument('-v', '--verbose', action='store_true', help="Display errors as they occur.")
 parser.add_argument('--sort', choices=['size', 'count', 'name'], default='size', help="Sort column.")
 parser.add_argument('-r', '--reverse', action='store_true', help="Reverse sort order.")
 parser.add_argument('-n', type=int, help="Number of lines to display (mode -H).")
 parser.add_argument('--full', action='store_true', help="Display all lines (mode -H).")
 parser.add_argument('--path', default='/nix/store', help="Path to the nix store (default: /nix/store).")
+parser.add_argument('--simplify', action='store_true', help="Use simple output format (machine readable).")
 args = parser.parse_args()
 
 # Rich management for display (only if -H is enabled)
-USE_RICH = args.human_readable
+USE_RICH = not args.simplify
 if USE_RICH:
     try:
         from rich.console import Console
         from rich.table import Table
         from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeRemainingColumn, MofNCompleteColumn
     except ImportError:
-        print("Error: The 'rich' module is required for the -H option. Install it with 'pip install rich' or remove the -H option.", file=sys.stderr)
+        print("Error: The 'rich' module is required for the default output. Install it with 'pip install rich' or use --simplify.", file=sys.stderr)
         sys.exit(1)
 
 def get_human_size(size_in_kb):
@@ -180,7 +181,7 @@ def main():
         processed_stats.append((name, data, perc, cum_perc))
 
     # Affichage
-    if args.human_readable:
+    if USE_RICH:
         console = Console()
         
         limit = len(sorted_stats)
@@ -192,7 +193,7 @@ def main():
 
         special_names_re = re.compile(r"^(source|system-path|nixos($|-.*))")
 
-        table = Table(title="Nix Disk Space Analysis", expand=True, row_styles=["", "on color(236)"])
+        table = Table(title=None, expand=True, row_styles=["", "on color(236)"])
         table.add_column("Package Name", style="cyan", no_wrap=True)
         table.add_column("Size", justify="right", style="green")
         table.add_column("Occurrences", justify="right", style="magenta")
