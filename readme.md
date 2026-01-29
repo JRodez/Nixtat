@@ -1,5 +1,6 @@
-Nixtat is a script for quick and simple nix store space occupation analysis
+# Nixtat
 
+Nixtat is a script for quick and simple nix store space occupation analysis.
 It scans your `/nix/store` (or any specified path), aggregates package sizes by name (with or without versions), and displays a sorted, human-readable table of the results.
 
 # Features
